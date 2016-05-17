@@ -4,6 +4,7 @@ require 'base64'
 require 'faraday'
 require 'faraday_middleware'
 
+Faraday::Connection::METHODS << :proppatch
 Faraday::Connection::METHODS << :propfind
 
 module Yandex
@@ -61,6 +62,21 @@ module Yandex
       def list path
         request = Request::List.new(@http, path)
         request.perform
+      end
+
+      def publish url
+        request = Request::Publication.new(@http,url)
+        request.publish
+      end
+
+      def unpublish url
+        request = Request::Publication.new(@http,url)
+        request.unpublish
+      end
+
+      def check url
+        request = Request::Publication.new(@http,url)
+        request.check
       end
 
       alias_method :mkdir, :mkcol
