@@ -33,8 +33,10 @@ class Yandex::Disk::Client::Request::Space
     def start_element name, attributes = []
       case name
         when 'd:quota-used-bytes'
+          @is_quota_available_bytes = false
           @is_quota_used_bytes = true
         when 'd:quota-available-bytes'
+          @is_quota_used_bytes = false
           @is_quota_available_bytes = true
       end
     end
