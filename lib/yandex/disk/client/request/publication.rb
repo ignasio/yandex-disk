@@ -22,7 +22,7 @@ class Yandex::Disk::Client::Request::Publication
     <prop>
         <public_url xmlns="urn:yandex:disk:meta"/>
     </prop>
-  </propfind>' 
+  </propfind>'
 
   HEADERS = {
     :Depth => 0
@@ -34,10 +34,13 @@ class Yandex::Disk::Client::Request::Publication
   end
 
   %w(publish unpublish check).each do |_method|
-    define_method _method do 
+    define_method _method do
       response = @http.run_request _method=="check" ? :propfind : :proppatch, @url, "#{self.class}::#{_method.upcase}BODY".constantize, HEADERS
-      parse_result = parse(response.body)
-      parse_result.public_url
+
+      if response.body.present?
+        parse_result = parse(response.body)
+        parse_result.public_url
+      end
     end
   end
 
